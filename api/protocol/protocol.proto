@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package goim.protocol;
+
+option go_package = "github.com/Terry-Mao/goim/api/protocol;protocol";
+
+/*
+ * v1.0.0
+ * protocol
+ */
+message Proto {
+    int32 ver = 1;// 版本号
+    int32 op = 2;// 消息类型，如Ping，Pong, Text
+    int32 seq = 3;// 序列号 TODO:
+    bytes body = 4;// 消息体 等于 PushMsg.Msg
+}

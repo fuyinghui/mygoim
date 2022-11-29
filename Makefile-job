@@ -1,0 +1,25 @@
+# Go parameters
+GOCMD=GO111MODULE=on go
+GOBUILD=$(GOCMD) build
+GOTEST=$(GOCMD) test
+
+all: test build
+build:
+	rm -rf target/
+	mkdir target/
+	cp cmd/job/job-example.toml target/job.toml
+	$(GOBUILD) -o target/job cmd/job/main.go
+
+
+test:
+	$(GOTEST) -v ./...
+
+clean:
+	rm -rf target/
+
+run:
+	nohup target/job -conf=target/job.toml -region=sh -zone=sh001 -deploy.env=dev 2>&1 > target/job.log &
+
+stop:
+	pkill -f target/job
+

@@ -1,0 +1,20 @@
+FROM golang:1.13.10 as build
+RUN mkdir -p /app/building
+WORKDIR /app/building
+ADD . /app/building
+RUN GOPROXY=https://goproxy.cn  make build
+
+FROM debian:stable-slim
+# Copy from docker build
+COPY --from=build /app/building/target/comet /app/bin/
+COPY --from=build /app/building/target/comet.toml /app/conf/
+ENV REGION=sh ZONE=sh001 DEPLOY_ENV=dev WEIGHT=10 ADDRs=127.0.0.1 DEBUG=true TZ=Asia/Shanghai
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+EXPOSE 3101
+EXPOSE 3102
+EXPOSE 3109
+
+WORKDIR /app
+CMD  /app/bin/comet -conf /app/conf/comet.toml
+

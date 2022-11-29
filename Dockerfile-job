@@ -1,0 +1,16 @@
+FROM golang:1.13.10 as build
+RUN mkdir -p /app/building
+WORKDIR /app/building
+ADD . /app/building
+RUN GOPROXY=https://goproxy.cn  make build
+
+FROM debian:stable-slim
+# Copy from docker build
+COPY --from=build /app/building/target/job /app/bin/
+COPY --from=build /app/building/target/job.toml /app/conf/
+ENV REGION=sh ZONE=sh001 DEPLOY_ENV=dev TZ=Asia/Shanghai
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+WORKDIR /app
+CMD  /app/bin/job -conf /app/conf/job.toml
+
