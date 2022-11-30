@@ -45,8 +45,8 @@
 [redis]
     network = "tcp"
     db = 15
-    addr = "121.43.232.10:6379"
-    auth = "Gfr20001114"
+    addr = "121.40.219.69:12379"
+    auth = "YYk358@q"
     active = 60000
     idle = 1024
     dialTimeout = "800ms"
